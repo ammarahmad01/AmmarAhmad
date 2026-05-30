@@ -6,7 +6,9 @@ import { useEffect, useState } from "react";
  * @returns {boolean} - True if viewport is smaller than the width, false otherwise.
  */
 export const useMobile = (width = 768) => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.matchMedia(`(max-width: ${width}px)`).matches : false
+  );
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(`(max-width: ${width}px)`);
