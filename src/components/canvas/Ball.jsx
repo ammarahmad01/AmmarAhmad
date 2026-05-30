@@ -37,21 +37,36 @@ const Ball = (props) => {
   );
 };
 
-const BallCanvas = ({ icon }) => {
-  return (
-    <Canvas
-      frameloop='demand'
-      dpr={[1, 2]}
-      gl={{ preserveDrawingBuffer: true }}
-    >
-      <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls enableZoom={false} />
-        <Ball imgUrl={icon} />
-      </Suspense>
+import ErrorBoundary from "./ErrorBoundary";
 
-      <Preload all />
-    </Canvas>
+const BallCanvas = ({ icon }) => {
+  const fallbackUI = (
+    <div className='w-20 h-20 rounded-full bg-tertiary border border-[#915EFF]/20 shadow-card flex justify-center items-center backdrop-blur-md'>
+      <img
+        src={icon}
+        alt='Tech icon'
+        className='w-12 h-12 object-contain'
+      />
+    </div>
+  );
+
+  return (
+    <ErrorBoundary fallback={fallbackUI}>
+      <Canvas
+        frameloop='demand'
+        dpr={[1, 2]}
+        gl={{ preserveDrawingBuffer: true }}
+      >
+        <Suspense fallback={<CanvasLoader />}>
+          <OrbitControls enableZoom={false} />
+          <Ball imgUrl={icon} />
+        </Suspense>
+
+        <Preload all />
+      </Canvas>
+    </ErrorBoundary>
   );
 };
 
 export default BallCanvas;
+

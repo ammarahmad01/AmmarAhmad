@@ -23,6 +23,7 @@ import {
   jobit,
   tripguide,
   threejs,
+  postman,
   user,
   rentease,
   noor,
@@ -101,8 +102,8 @@ const technologies = [
     icon: mongodb,
   },
   {
-    name: "Three JS",
-    icon: threejs,
+    name: "Postman",
+    icon: postman,
   },
   {
     name: "git",

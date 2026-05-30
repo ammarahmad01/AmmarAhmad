@@ -7,7 +7,7 @@ import Experience from "./Experience";
 import Works from "./Works";
 import Feedbacks from "./Feedbacks";
 import Contact from "./Contact";
-import CanvasLoader from "./Loader";
+import CanvasLoader, { HtmlLoader } from "./Loader";
 
 
 export {
@@ -20,8 +20,10 @@ export {
   Feedbacks,
   Contact,
   CanvasLoader,
+  HtmlLoader,
   EarthCanvas, 
   BallCanvas, 
   ComputersCanvas, 
   StarsCanvas
 };
+

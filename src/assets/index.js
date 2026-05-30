@@ -20,6 +20,8 @@ import redux from "./tech/redux.png";
 import tailwind from "./tech/tailwind.png";
 import typescript from "./tech/typescript.png";
 import threejs from "./tech/threejs.svg";
+import postman from "./tech/postman.svg";
+
 
 import meta from "./company/meta.png";
 import shopify from "./company/shopify.png";
@@ -33,6 +35,7 @@ import user from "./user.jpg";
 import rentease from "./rentease.jpg";
 import sport from "./sport.jpg";
 import noor from "./noor.jpg";
+import desktop_pc_mockup from "./desktop_pc_mockup.png";
 
 export {
   logo,
@@ -67,4 +70,7 @@ export {
   rentease,
   sport,
   noor,
+  desktop_pc_mockup,
+  postman,
 };
+

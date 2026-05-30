@@ -1,10 +1,14 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
+import { motion } from "framer-motion";
 
 import CanvasLoader from "../Loader";
+import { desktop_pc_mockup } from "../../assets";
+import { useMobile } from "../../hooks/useMobile";
+import ErrorBoundary from "./ErrorBoundary";
 
-const Computers = ({ isMobile }) => {
+const Computers = () => {
   const computer = useGLTF("./desktop_pc/scene.gltf");
 
   return (
@@ -21,8 +25,8 @@ const Computers = ({ isMobile }) => {
       <pointLight intensity={1} />
       <primitive
         object={computer.scene}
-        scale={isMobile ? 0.7 : 0.75}
-        position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
+        scale={0.75}
+        position={[0, -3.25, -1.5]}
         rotation={[-0.01, -0.2, -0.1]}
       />
     </mesh>
@@ -30,49 +34,81 @@ const Computers = ({ isMobile }) => {
 };
 
 const ComputersCanvas = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMobile(768);
 
-  useEffect(() => {
-    // Add a listener for changes to the screen size
-    const mediaQuery = window.matchMedia("(max-width: 500px)");
+  if (isMobile) {
+    return (
+      <div className="absolute inset-0 top-[250px] w-full h-[calc(100vh-250px)] flex justify-center items-center pointer-events-none">
+        <div className="w-full h-full max-w-7xl mx-auto flex justify-center items-center px-6">
+          <motion.div
+            animate={{
+              y: [0, -15, 0],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "easeInOut"
+            }}
+            className="w-full h-[65%] sm:h-[75%] flex justify-center items-center pointer-events-auto"
+          >
+            <img
+              src={desktop_pc_mockup}
+              alt="Developer PC Mockup"
+              className="w-full h-full object-contain"
+              style={{
+                filter: "drop-shadow(0 0 35px rgba(145, 94, 255, 0.35))",
+              }}
+            />
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
 
-    // Set the initial value of the `isMobile` state variable
-    setIsMobile(mediaQuery.matches);
-
-    // Define a callback function to handle changes to the media query
-    const handleMediaQueryChange = (event) => {
-      setIsMobile(event.matches);
-    };
-
-    // Add the callback function as a listener for changes to the media query
-    mediaQuery.addEventListener("change", handleMediaQueryChange);
-
-    // Remove the listener when the component is unmounted
-    return () => {
-      mediaQuery.removeEventListener("change", handleMediaQueryChange);
-    };
-  }, []);
+  const fallbackUI = (
+    <div className="absolute inset-0 top-[250px] w-full h-[calc(100vh-250px)] flex justify-center items-center pointer-events-none">
+      <div className="w-full h-full max-w-7xl mx-auto flex justify-center items-center px-6">
+        <div className="w-full h-[65%] sm:h-[75%] flex flex-col justify-center items-center border border-dashed border-[#915EFF]/20 rounded-2xl p-4 bg-primary/20 pointer-events-auto">
+          <img
+            src={desktop_pc_mockup}
+            alt="Developer PC Mockup"
+            className="w-[120px] h-[120px] object-contain opacity-50 mb-4"
+          />
+          <p className="text-sm font-semibold text-secondary text-center">
+            Failed to initialize 3D scene.
+          </p>
+          <span className="text-xs text-secondary mt-1 text-center opacity-60">
+            Rendered fallback preview (WebGL context not available).
+          </span>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <Canvas
-      frameloop='demand'
-      shadows
-      dpr={[1, 2]}
-      camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: true }}
-    >
-      <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls
-          enableZoom={false}
-          maxPolarAngle={Math.PI / 2}
-          minPolarAngle={Math.PI / 2}
-        />
-        <Computers isMobile={isMobile} />
-      </Suspense>
+    <ErrorBoundary fallback={fallbackUI}>
+      <Canvas
+        frameloop='demand'
+        shadows
+        dpr={[1, 2]}
+        camera={{ position: [20, 3, 5], fov: 25 }}
+        gl={{ preserveDrawingBuffer: true }}
+      >
+        <Suspense fallback={<CanvasLoader />}>
+          <OrbitControls
+            enableZoom={false}
+            maxPolarAngle={Math.PI / 2}
+            minPolarAngle={Math.PI / 2}
+          />
+          <Computers />
+        </Suspense>
 
-      <Preload all />
-    </Canvas>
+        <Preload all />
+      </Canvas>
+    </ErrorBoundary>
   );
 };
 
 export default ComputersCanvas;
+
